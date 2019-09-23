@@ -1,10 +1,11 @@
 # Projeto Sales Processor
 Serviço de processamento de arquivos de vendas e geração de relatório.
 
-## Comentários
+## Sobre
 Este projeto foi desenvolvido utilizando como base o [WatchService](https://docs.oracle.com/javase/7/docs/api/java/nio/file/WatchService.html) do pacote java.nio.file do Java.
 
-O serviço é disparado ao ocorrer um dos seguintes eventos: Criação, deleção ou modificação.
+O serviço é disparado ao ocorrer um dos seguintes eventos nos arquivos da pasta in: Criação, deleção ou modificação.
+OBS.: Os arquivos devem estar com o encoding UTF-8.
 
 Quando ocorre algum destes eventos todos os arquivos são processados e é gerado o relatório de saída.
 
