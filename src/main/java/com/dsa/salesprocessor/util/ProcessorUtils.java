@@ -93,7 +93,7 @@ public class ProcessorUtils {
 
     /**
      * Escreve no arquivo out.txt os dados do relatório.
-     *
+     * 
      * @param quantityOfCustomers   quantidade de {@link Customer}.
      * @param quantityOfSellers     quantidade de {@link Salesman}
      * @param mostExpensiveSaleId   id da {@link Sale} mais cara.
