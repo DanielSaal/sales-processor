@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Classe modelo do cliente.
+ *
+ * @author daniel.alves
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

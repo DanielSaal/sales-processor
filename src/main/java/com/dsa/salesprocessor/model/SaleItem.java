@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Classe modelo de um item da venda.
+ *
+ * @author daniel.alves
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

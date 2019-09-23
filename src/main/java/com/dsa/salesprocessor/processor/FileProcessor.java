@@ -6,6 +6,7 @@ import com.dsa.salesprocessor.converter.SalesmanConverter;
 import com.dsa.salesprocessor.model.Customer;
 import com.dsa.salesprocessor.model.Sale;
 import com.dsa.salesprocessor.model.Salesman;
+import com.dsa.salesprocessor.util.ProcessorUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
@@ -13,23 +14,55 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static com.dsa.salesprocessor.enums.DataTypeEnum.*;
 
+/**
+ * Classe de processamento dos arquivos de entrada e saída.
+ *
+ * @author daniel.alves
+ */
 @Component
 public class FileProcessor {
 
+    private static final Logger LOGGER = Logger.getLogger(FileProcessor.class.getName());
+
+    /**
+     * Método que realiza o processamento dos arquivos de entrada e a geração do relatório.
+     *
+     * @param pathStream lista de arquivos para processamento.
+     */
     public void processor(Stream<Path> pathStream) {
 
+        LOGGER.info("Iniciando serviço de processamento dos arquivos");
         List<Salesman> sellers = new ArrayList<>();
         List<Customer> customers = new ArrayList<>();
         List<Sale> sales = new ArrayList<>();
 
         // INPUT PROCESSOR
+        inputProcessor(pathStream, sellers, customers, sales);
+
+        // OUTPUT PROCESSOR
+        outputProcessor(sellers, customers, sales);
+
+    }
+
+    /**
+     * Processamento dos arquivos de entrada.
+     *
+     * @param pathStream    lista de arquivos para processamento.
+     * @param sellers       lista de {@link Salesman}.
+     * @param customers     lista de {@link Customer}.
+     * @param sales         lista de {@link Sale}.
+     */
+    private void inputProcessor(Stream<Path> pathStream, List<Salesman> sellers, List<Customer> customers, List<Sale> sales) {
+
+        LOGGER.info("Iniciando processamento dos arquivos de entrada");
         pathStream.forEach(path -> {
             File file = path.toFile();
-            System.out.println("READING FILE  " + file.getName());
+            LOGGER.info("Lendo arquivo " + file.getName());
             try {
                 List<String> lines = FileUtils.readLines(file, "UTF-8");
                 for (String line : lines) {
@@ -37,24 +70,40 @@ public class FileProcessor {
                     String[] info = line.split("ç");
 
                     if (info[0].equals(SALESMAN.getCode())) {
-                        System.out.println("IT'S A SALESMAN");
                         sellers.add(SalesmanConverter.toModel(info));
 
                     } else if (info[0].equals(CUSTOMER.getCode())) {
-                        System.out.println("IT'S A CUSTOMER");
                         customers.add(CustomerConverter.toModel(info));
 
                     } else if (info[0].equals(SALE.getCode())) {
-                        System.out.println("IT'S A SALE");
                         sales.add(SaleConverter.toModel(info, sellers));
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Input Processor Error: " + e.getMessage());
+                LOGGER.severe("Erro no processamento do arquivo de entrada");
             }
         });
+    }
 
-        // OUTPUT PROCESSOR
+    /**
+     * Processamento para geração do relatório de saída.
+     *
+     * @param sellers       lista de {@link Salesman}.
+     * @param customers     lista de {@link Customer}.
+     * @param sales         lista de {@link Sale}.
+     */
+    private void outputProcessor(List<Salesman> sellers, List<Customer> customers, List<Sale> sales) {
+        // QUANTITY OF CUSTOMERS
+        System.out.println("QUANTITY OF CUSTOMERS: " + customers.size());
+
+        // QUANTITY OF SALESMAN
+        System.out.println("QUANTITY OF SALESMAN: " + sellers.size());
+
+        // MOST EXPENSIVE SALE ID
+        System.out.println("MOST EXPENSIVE SALE ID: " + ProcessorUtils.findMostExpensiveSaleId(sales));
+
+        // WORST SALESMAN
+        System.out.println("WORST SALESMAN: " + ProcessorUtils.findWorstSalesman(sales));
     }
 
 }

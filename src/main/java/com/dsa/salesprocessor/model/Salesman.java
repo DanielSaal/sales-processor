@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Salesman
+ * Classe modelo de um vendedor.
+ *
+ * @author daniel.alves
  */
 @Data
 @AllArgsConstructor

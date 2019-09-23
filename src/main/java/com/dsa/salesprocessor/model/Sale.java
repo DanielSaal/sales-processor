@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Classe modelo da venda.
+ *
+ * @author daniel.alves
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
