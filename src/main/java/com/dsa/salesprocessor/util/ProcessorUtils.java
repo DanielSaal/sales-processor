@@ -8,7 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
+import java.util.*;
 
 /**
  * Classe de utilidades do projeto.
@@ -69,19 +69,26 @@ public class ProcessorUtils {
      */
     public static String findWorstSalesman(List<Sale> sales) {
 
-        String name = "";
-        Double lessExpensive = 0D;
+        Map<String, Double> salesmanGroup = new HashMap<>();
         for(Sale sale : sales) {
-
-            Double expensive = sale.getSaleItems().stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
-
-            if(lessExpensive == 0D || expensive < lessExpensive){
-                name = sale.getSalesman().getName();
-                lessExpensive = expensive;
+            if(salesmanGroup.containsKey(sale.getSalesman().getName())) {
+                Double expensive = salesmanGroup.get(sale.getSalesman().getName());
+                expensive += sale.getSaleItems().stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+                salesmanGroup.put(sale.getSalesman().getName(), expensive);
+            } else {
+                Double expensive = sale.getSaleItems().stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+                salesmanGroup.put(sale.getSalesman().getName(), expensive);
             }
         }
 
-        return name;
+        if(Objects.nonNull(salesmanGroup)) {
+
+            Map.Entry<String, Double> salesmanWithWorstSale = Collections.min(salesmanGroup.entrySet(),
+                    Comparator.comparing(Map.Entry::getValue));
+
+            return salesmanWithWorstSale.getKey();
+        }
+        return null;
     }
 
     /**
