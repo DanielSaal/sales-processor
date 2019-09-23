@@ -1,9 +1,13 @@
 package com.dsa.salesprocessor.util;
 
+import com.dsa.salesprocessor.model.Customer;
 import com.dsa.salesprocessor.model.Sale;
 import com.dsa.salesprocessor.model.Salesman;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 /**
@@ -15,7 +19,7 @@ public class ProcessorUtils {
 
     private final static String BASE_DIRECTORY = System.getProperty("user.home") + File.separator + "data";
     public final static String INPUT_DIRECTORY = BASE_DIRECTORY + File.separator + "in";
-    public final static String OUTPUT_DIRECTORY = BASE_DIRECTORY + File.separator + "out";
+    public final static String OUTPUT_DIRECTORY = BASE_DIRECTORY + File.separator + "out" + File.separator;
 
     /**
      * Busca o objeto {@link Salesman} pelo nome.
@@ -58,10 +62,10 @@ public class ProcessorUtils {
     }
 
     /**
-     * Busca o pior {@link com.dsa.salesprocessor.model.Salesman}.
+     * Busca o pior {@link Salesman}.
      *
      * @param sales lista de {@link Sale}.
-     * @return nome do pior {@link com.dsa.salesprocessor.model.Salesman}.
+     * @return nome do pior {@link Salesman}.
      */
     public static String findWorstSalesman(List<Sale> sales) {
 
@@ -78,5 +82,35 @@ public class ProcessorUtils {
         }
 
         return name;
+    }
+
+    /**
+     * Escreve no arquivo out.txt os dados do relatório.
+     *
+     * @param quantityOfCustomers   quantidade de {@link Customer}.
+     * @param quantityOfSellers     quantidade de {@link Salesman}
+     * @param mostExpensiveSaleId   id da {@link Sale} mais cara.
+     * @param nameOfWorstSalesman   nome do pior {@link Salesman}.
+     *
+     * @throws Exception exceção possível ao gerar relatório.
+     */
+    public static void writeOutputFile(Integer quantityOfCustomers, Integer quantityOfSellers, Long mostExpensiveSaleId, String nameOfWorstSalesman) throws Exception {
+
+        File fout = new File(OUTPUT_DIRECTORY + "out.txt");
+        FileOutputStream fos = new FileOutputStream(fout);
+
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+
+        bw.write("Quantidade de clientes no arquivo de entrada: " + quantityOfCustomers);
+        bw.newLine();
+        bw.write("Quantidade de vendedores no arquivo de entrada: " + quantityOfSellers);
+        bw.newLine();
+        bw.write("ID da venda mais cara: " + mostExpensiveSaleId);
+        bw.newLine();
+        bw.write("O pior vendedor: " + nameOfWorstSalesman);
+        bw.newLine();
+
+
+        bw.close();
     }
 }

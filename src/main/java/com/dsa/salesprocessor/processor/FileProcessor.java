@@ -36,7 +36,7 @@ public class FileProcessor {
      */
     public void processor(Stream<Path> pathStream) {
 
-        LOGGER.info("Iniciando serviço de processamento dos arquivos");
+        LOGGER.info("Iniciando serviço de processamento dos arquivos de entrada e saída");
         List<Salesman> sellers = new ArrayList<>();
         List<Customer> customers = new ArrayList<>();
         List<Sale> sales = new ArrayList<>();
@@ -46,6 +46,8 @@ public class FileProcessor {
 
         // OUTPUT PROCESSOR
         outputProcessor(sellers, customers, sales);
+
+        LOGGER.info("Finalizado serviço de processamento dos arquivos de entrada e saída");
 
     }
 
@@ -66,7 +68,6 @@ public class FileProcessor {
             try {
                 List<String> lines = FileUtils.readLines(file, "UTF-8");
                 for (String line : lines) {
-                    System.out.println(line);
                     String[] info = line.split("ç");
 
                     if (info[0].equals(SALESMAN.getCode())) {
@@ -83,6 +84,7 @@ public class FileProcessor {
                 LOGGER.severe("Erro no processamento do arquivo de entrada");
             }
         });
+        LOGGER.info("Finalizado processamento dos arquivos de entrada");
     }
 
     /**
@@ -93,17 +95,14 @@ public class FileProcessor {
      * @param sales         lista de {@link Sale}.
      */
     private void outputProcessor(List<Salesman> sellers, List<Customer> customers, List<Sale> sales) {
-        // QUANTITY OF CUSTOMERS
-        System.out.println("QUANTITY OF CUSTOMERS: " + customers.size());
 
-        // QUANTITY OF SALESMAN
-        System.out.println("QUANTITY OF SALESMAN: " + sellers.size());
-
-        // MOST EXPENSIVE SALE ID
-        System.out.println("MOST EXPENSIVE SALE ID: " + ProcessorUtils.findMostExpensiveSaleId(sales));
-
-        // WORST SALESMAN
-        System.out.println("WORST SALESMAN: " + ProcessorUtils.findWorstSalesman(sales));
+        LOGGER.info("Iniciando processamento do arquivo de saída");
+        try {
+            ProcessorUtils.writeOutputFile(customers.size(), sellers.size(), ProcessorUtils.findMostExpensiveSaleId(sales), ProcessorUtils.findWorstSalesman(sales));
+        } catch (Exception e) {
+            LOGGER.severe("Erro no processamento do arquivo de saída");
+        }
+        LOGGER.info("Finalizado processamento do arquivo de saída");
     }
 
 }
