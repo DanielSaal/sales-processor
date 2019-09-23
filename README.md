@@ -15,7 +15,7 @@ Para executar este projeto deve-se:
 
 ##### 1 - Compilar o projeto com o maven:
 ```console
-maven clean install
+mvn clean install
 ```
 
 ##### 2 - Acessar a pasta target do projeto e executá-lo:
